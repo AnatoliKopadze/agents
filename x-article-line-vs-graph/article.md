@@ -24,6 +24,8 @@ No? Then nobody waits.
 
 It sends 9 subagents at once. Each one gets one file and a clean head.
 
+(A subagent is a helper that Claude starts with its own fresh context.)
+
 Only the answers come back. Then one last subagent puts them together.
 
 Same Claude. Same job. Different shape.
@@ -34,11 +36,11 @@ Same Claude. Same job. Different shape.
 
 Claude Code can build the graph agent for you. The feature is called **dynamic workflows**.
 
-You ask for a workflow. Claude writes a short plan in plain JavaScript. Then it starts a team of subagents and runs the plan.
+You ask for a workflow. Claude writes a short script in plain JavaScript and runs it. The script starts a team of subagents.
 
-Running the plan itself costs zero tokens, because it's plain code. You pay only for the subagents it starts.
+Running the script itself costs zero tokens, because it's plain code. While it runs, you pay only for the subagents it starts.
 
-A subagent is a helper that Claude starts with its own clean context.
+You don't write this code yourself. Claude does. The code in this article shows what goes inside, so you know what to ask for.
 
 Below are 14 differences between the two agents, most with code or a prompt. At the end: 6 jobs with prompts you can paste, and a cheat sheet you can save.
 
@@ -117,6 +119,11 @@ The form is a JSON schema. Pass one to agent(), and the subagent can only hand b
 
 So instead of "I found a few worrying patterns in the auth module...", you get file, line, problem, severity. Data your script can use.
 
+Now every arrow carries something you can name, like "list of findings". That gives you two things:
+
+- **Spotting a fake arrow.** If you can't name what's on it, cut it.
+- **Swapping a box.** If the new box takes and gives the same shapes, nothing else has to change.
+
 ```javascript
 const FINDINGS = {
   type: 'object',
@@ -148,21 +155,16 @@ const result = await agent(`Review ${file} for missing auth checks.`, {
 
 ## 04. The line agent pays Claude to glue. The graph agent glues with code.
 
-In a graph, every arrow carries something you can name: "list of findings", not "step 3". That gives you two things:
-
-- **Spotting a fake arrow.** If you can't name what's on it, cut it.
-- **Swapping a box.** If the new box takes and gives the same shapes, nothing else has to change.
+Between "many subagents found stuff" and "one subagent writes the answer" there is usually glue: flatten the lists, drop the duplicates, drop the noise.
 
 ![05-glue-with-code](images/05-glue-with-code.png)
-
-Between "many subagents found stuff" and "one subagent writes the answer" there is usually glue: flatten the lists, drop the duplicates, drop the noise.
 
 The line agent pays Claude to do this. In a graph it's a few lines of JavaScript: instant, the same result every time, zero tokens.
 
 So don't start a subagent just to merge lists and drop duplicates. **Pay Claude to think. Let code do the gluing.**
 
 ```javascript
-// The arrow between the fan-out and the final writer: plain code, no agent.
+// The arrow between the finders and the final writer: plain code, no agent.
 const all = results.filter(Boolean).flatMap(r => r.findings)
 const seen = new Set()
 const unique = all.filter(f => {
@@ -210,8 +212,6 @@ All the answers from a fan-out end up in one place. That place can be a subagent
 
 Waiting for all of them is a wall: nothing moves on until the last answer is in. Walls cost time, so put one up only when the next step needs all the answers side by side:
 
-![07-when-to-wait](images/07-when-to-wait.png)
-
 - removing duplicates across all sources
 - stopping early because nothing was found at all
 - a prompt that says "compare this with the other findings"
@@ -219,6 +219,8 @@ Waiting for all of them is a wall: nothing moves on until the last answer is in.
 Don't wait just to flatten a list or clean up each item. Do that on the way.
 
 Quick test. Say your script goes parallel, then a small cleanup, then parallel again. If that cleanup never compares items with each other, the wall in the middle is wasted. Use pipeline() instead (more on that in 13).
+
+![07-when-to-wait](images/07-when-to-wait.png)
 
 ```javascript
 // A wall that is worth it: stop before you pay for verification
@@ -267,7 +269,9 @@ Claude makes the call inside the box. Everything after the call is code, and cod
 The line agent can skip the audit one day and run it the next. In a graph, a skip only happens if the script says so.
 
 ```javascript
-const question = `Is this diff small and safe, or big and risky?\n${diff}`
+const question = `Is this diff small and safe?
+Answer small only if it is both. Otherwise answer big.
+${diff}`
 const { size } = await agent(question, {
   schema: {
     type: 'object',
@@ -306,7 +310,7 @@ Three ways to add checks:
 - **Different lenses.** Give each checker its own question: is it correct? is it a security issue? can I reproduce it? Three different checks catch more than three copies of the same check.
 - **Judges.** Make 3 attempts from different angles and let judges score them. Build on the winner and borrow the best parts of the other two.
 
-A team ported the Bun runtime with this kind of review in the loop.
+A team ported the Bun runtime with checks like these in the loop.
 
 ```javascript
 // VERDICT is a schema like FINDINGS, with two fields:
@@ -408,7 +412,7 @@ const facts = await parallel(files.map(file => () =>
 
 // judgment: no override, so it runs on your session model
 const list = JSON.stringify(facts.filter(Boolean))
-const report = await agent(`Write the API changes report from:\n${list}`)
+const report = await agent(`Write a short overview of our public API from:\n${list}`)
 ```
 
 ---
@@ -436,9 +440,9 @@ Put up a wall only for the three cases in 06.
 const verified = await pipeline(
   files,
   file => agent(`Find missing auth checks in ${file}.`, { schema: FINDINGS }),
-  found => agent(`Try to prove these wrong:\n${JSON.stringify(found)}`, {
-    schema: VERDICTS,
-  })
+  found => found.findings.length === 0
+    ? null // nothing found in this file? no verifier
+    : agent(`Try to prove these wrong:\n${JSON.stringify(found)}`, { schema: VERDICTS })
 )
 ```
 
@@ -446,9 +450,7 @@ const verified = await pipeline(
 
 ## 14. You draw the line agent. Claude draws the graph.
 
-For jobs you can't plan ahead, let Claude draw the graph.
-
-You describe the goal. Claude decides where the work splits and where it merges, and writes a new graph for this one run.
+You don't have to plan the graph yourself either. Describe the goal. Claude decides where the work splits and where it merges, and writes a new script for this one run.
 
 ![15-claude-draws-it](images/15-claude-draws-it.png)
 
@@ -456,11 +458,11 @@ Three ways in:
 
 - **Ask for it.** Put "use a workflow" in your prompt.
 - **Run a ready-made one.** /deep-research comes with Claude Code: scope → parallel search → fetch → try to disprove → write. That's a diamond with skeptics on the arrows.
-- **Turn on ultracode.** Every big task in the session then gets its own workflow.
-
-Press s after a good run to save its script into .claude/workflows/. Commit it, and anyone who clones the repo can run it by name.
+- **Turn on ultracode.** Put the word "ultracode" in your prompt. Then Claude plans a workflow for every big task.
 
 Want to watch it work? /workflows shows the run live, subagent by subagent.
+
+After a good run, press s to save its script into .claude/workflows/. Commit it, and anyone who clones the repo can run it by name.
 
 ```
 › Use a workflow to check every file in src/routes for missing auth checks.
@@ -484,7 +486,7 @@ Want to watch it work? /workflows shows the run live, subagent by subagent.
 
 **3. Port a module to TypeScript.** Every file gets its own subagent and its own worktree, so nobody overwrites anybody. A file is done only when its tests pass.
 
-*Prompt: "Use a workflow to port src/legacy to TypeScript. One subagent per file, each in its own worktree. Run the tests after each file and send failures back."*
+*Prompt: "Use a workflow to port src/legacy to TypeScript. One subagent per file, each in its own worktree. Run the tests after each file and send failures back, up to 3 tries per file. List the files that still fail."*
 
 **4. Diff review that grows with the diff.** A line agent gives a typo fix and a rewrite of your login code the same review. This one sizes up the diff first.
 
@@ -492,11 +494,11 @@ Want to watch it work? /workflows shows the run live, subagent by subagent.
 
 **5. Weekly scan.** Release notes, blogs and forums get read at the same time, and the merge ranks the changes by impact. Save it, and next week it's one command.
 
-*Prompt: "Use a workflow to check the release notes and blogs of [the tools I use] and give me this week's changes, ranked by impact."*
+*Prompt: "Use a workflow to check the release notes, blogs and forums of [the tools I use] and give me this week's changes, ranked by impact."*
 
 **6. Bug hunt of unknown size.** The line agent stops at 10 bugs. This one stops when the bugs stop, and it never pays twice for the same rejected find.
 
-*Prompt: "Use a workflow to find bugs in src/payments. Verify each one. Keep going until two rounds in a row find nothing new."*
+*Prompt: "Use a workflow to find bugs in src/payments. Verify each one. Count rejected finds as seen too, so they don't come back. Keep going until two rounds in a row find nothing new."*
 
 ---
 

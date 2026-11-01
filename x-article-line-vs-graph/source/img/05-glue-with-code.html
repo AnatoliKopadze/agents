@@ -48,7 +48,8 @@
         <div class="node accent mono" id="bc">results C</div>
       </div>
       <div class="glue">
-        <div class="code" id="code"><span class="k">const</span> all = results.filter(Boolean).flat()
+        <div class="code" id="code"><span class="k">const</span> all = results.filter(Boolean)
+  .flatMap(r => r.findings)
 <span class="k">const</span> unique = dedupe(all)
 <span class="k">const</span> real = unique.filter(f => f.severity !== <span class="s">'low'</span>)<i id="codeout"></i></div>
         <div class="pill green out" id="bout">0 tokens · same every time</div>

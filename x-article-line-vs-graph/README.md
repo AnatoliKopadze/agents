@@ -27,3 +27,9 @@ node source/design/render.cjs source/img/02-and-then-test.html images/02-and-the
 ```
 
 Скрипт малює картинку у 2x і пише, якщо текст вилазить за рамку або щось накладається.
+
+Після правок у `article.md` прев'ю можна зібрати знову:
+
+```bash
+python3 source/build_preview.py .
+```
