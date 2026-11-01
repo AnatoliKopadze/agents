@@ -1,0 +1,69 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .title { margin-bottom: 36px; }
+  .gate-grid { display: grid; grid-template-columns: 206px 1fr 184px 1fr 206px; grid-template-rows: repeat(5, auto); row-gap: 13px; align-items: center; }
+  .gate-grid > .node { font-size: 26px; padding: 11px 22px; }
+  .f { grid-column: 1; }
+  .r { grid-column: 5; }
+  #gate { grid-column: 3; grid-row: 1 / 6; align-self: stretch; display: flex; flex-direction: column; justify-content: center; white-space: normal; padding: 20px 12px; font-size: 30px; line-height: 1.15; }
+  #gate small { font-size: 20px; line-height: 1.35; margin-top: 14px; }
+  .anc { grid-column: 3; display: block; width: 0; height: 2px; align-self: center; }
+  .anc.in { justify-self: start; }
+  .anc.out { justify-self: end; }
+  .lenses { display: grid; grid-template-columns: 1fr auto 1fr; column-gap: 14px; margin-top: 44px; }
+  #p1 { justify-self: end; } #p3 { justify-self: start; }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">09 · Try to kill it</div>
+  <h1 class="title">Every finding has to <em>survive</em></h1>
+  <div class="gate-grid">
+    <div class="node accent f" id="fA" style="grid-row:1">finding A</div>
+    <div class="node accent f" id="fB" style="grid-row:2">finding B</div>
+    <div class="node accent f" id="fC" style="grid-row:3">finding C</div>
+    <div class="node accent f" id="fD" style="grid-row:4">finding D</div>
+    <div class="node accent f" id="fE" style="grid-row:5">finding E</div>
+
+    <div class="node dark" id="gate">3 skeptics<br>each<small>try to prove<br>it wrong</small></div>
+    <i class="anc in" id="iA" style="grid-row:1"></i><i class="anc out" id="oA" style="grid-row:1"></i>
+    <i class="anc in" id="iB" style="grid-row:2"></i><i class="anc out" id="oB" style="grid-row:2"></i>
+    <i class="anc in" id="iC" style="grid-row:3"></i><i class="anc out" id="oC" style="grid-row:3"></i>
+    <i class="anc in" id="iD" style="grid-row:4"></i><i class="anc out" id="oD" style="grid-row:4"></i>
+    <i class="anc in" id="iE" style="grid-row:5"></i><i class="anc out" id="oE" style="grid-row:5"></i>
+
+    <div class="node green r" id="rA" style="grid-row:1">A · survived</div>
+    <div class="node gray dead r" id="rB" style="grid-row:2">B · refuted</div>
+    <div class="node gray dead r" id="rC" style="grid-row:3">C · refuted</div>
+    <div class="node green r" id="rD" style="grid-row:4">D · survived</div>
+    <div class="node gray dead r" id="rE" style="grid-row:5">E · refuted</div>
+  </div>
+  <div class="lenses" id="lenses">
+    <span class="pill" id="p1">is it correct?</span>
+    <span class="pill" id="p2">is it a security issue?</span>
+    <span class="pill" id="p3">can I reproduce it?</span>
+  </div>
+  <div class="caption"><b>Keep it only if most skeptics fail.</b><br>Give each one a different lens.</div>
+</div>
+<script src="../design/wires.js"></script>
+<script>
+draw(() => {
+  const ok = { A: true, B: false, C: false, D: true, E: false };
+  for (const k of 'ABCDE') {
+    wire('f' + k, 'i' + k, { from: 'right', to: 'left' });
+    wire('o' + k, 'r' + k, { from: 'right', to: 'left', color: ok[k] ? 'green' : 'muted' });
+  }
+  // bracket: the gate's 3 skeptics -> one lens each (no arrowheads)
+  const svg = document.querySelector('svg.wires'), fr = document.querySelector('.frame').getBoundingClientRect();
+  const g = document.getElementById('gate').getBoundingClientRect();
+  const ps = ['p1', 'p2', 'p3'].map(id => document.getElementById(id).getBoundingClientRect());
+  const gx = g.left + g.width / 2 - fr.left, gy = g.bottom - fr.top + 6;
+  const py = ps[0].top - fr.top - 6, by = Math.round((gy + py) / 2), r = 10;
+  const [x1, x2, x3] = ps.map(p => p.left + p.width / 2 - fr.left);
+  const d = `M${gx},${gy} V${by} M${x1},${py} V${by + r} Q${x1},${by} ${x1 + r},${by} H${x3 - r} Q${x3},${by} ${x3},${by + r} V${py} M${x2},${by} V${py}`;
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', d); path.setAttribute('fill', 'none'); path.setAttribute('stroke', '#B4ACA0');
+  path.setAttribute('stroke-width', 2.5); path.setAttribute('stroke-linecap', 'round'); path.setAttribute('stroke-linejoin', 'round');
+  svg.appendChild(path);
+});
+</script>
+</body></html>

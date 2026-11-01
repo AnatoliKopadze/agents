@@ -1,0 +1,184 @@
+/* Shared design system for all article images. Do not edit per image; add a <style> block in the image file for one-off tweaks. */
+:root {
+  --bg: #F7F3EC;
+  --card: #FFFCF7;
+  --ink: #1D1B18;
+  --ink-2: #3B3833;
+  --muted: #8A8379;
+  --line: #DDD5C8;
+  --accent: #C8552B;
+  --accent-ink: #9C3B17;
+  --accent-soft: #F7E3D6;
+  --accent-border: #E6A98A;
+  --green: #4D6B37;
+  --green-soft: #E4ECDA;
+  --green-border: #A9BE95;
+  --gray-soft: #EFEAE2;
+  --dark: #1E1C19;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); }
+body { -webkit-font-smoothing: antialiased; }
+
+/* Canvas. Default width 1000px. Height grows with content. */
+.frame {
+  position: relative;
+  width: 1000px;
+  padding: 56px 60px 52px;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+.frame.wide { width: 1500px; }
+
+/* Text */
+.kicker {
+  font: 600 20px/1 'JetBrains Mono', monospace;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 16px;
+}
+.title {
+  font: 800 52px/1.04 'Inter Display', 'Inter', sans-serif;
+  letter-spacing: -0.028em;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+.title em { font-style: normal; color: var(--accent); }
+.sub {
+  font: 500 25px/1.38 'Inter', sans-serif;
+  color: var(--muted);
+  margin: 0 0 40px;
+}
+.caption {
+  margin-top: 40px;
+  font: 500 20px/1.55 'JetBrains Mono', monospace;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+}
+.caption b { color: var(--accent); font-weight: 700; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* Layout helpers */
+.stage { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
+.col { display: flex; flex-direction: column; gap: 18px; align-items: center; }
+.row { display: flex; gap: 18px; align-items: center; }
+.center { justify-content: center; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 22px; }
+
+/* Nodes (boxes) */
+.node {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 24px;
+  font: 600 28px/1.2 'Inter', sans-serif;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.node small {
+  display: block;
+  font: 500 18px/1.3 'JetBrains Mono', monospace;
+  color: var(--muted);
+  margin-top: 6px;
+  letter-spacing: .01em;
+}
+.node.accent { background: var(--accent-soft); border-color: var(--accent-border); color: var(--accent-ink); }
+.node.accent small { color: var(--accent); }
+.node.green { background: var(--green-soft); border-color: var(--green-border); color: var(--green); }
+.node.green small { color: var(--green); }
+.node.dark { background: var(--ink); border-color: var(--ink); color: #FBF7F0; }
+.node.dark small { color: #F0A07A; }
+.node.ghost { background: transparent; border-style: dashed; color: var(--muted); }
+.node.gray { background: var(--gray-soft); border-color: var(--line); color: var(--muted); }
+.node.mono { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 24px; }
+.node.sm { font-size: 22px; padding: 10px 16px; border-radius: 14px; }
+.node.lg { font-size: 34px; padding: 22px 34px; border-radius: 22px; }
+.node.dead { opacity: .45; text-decoration: line-through; }
+
+/* Small labels */
+.pill {
+  display: inline-block;
+  font: 600 18px/1.2 'JetBrains Mono', monospace;
+  background: var(--bg);
+  padding: 4px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.pill.accent { color: var(--accent-ink); border-color: var(--accent-border); background: var(--accent-soft); }
+.pill.green { color: var(--green); border-color: var(--green-border); background: var(--green-soft); }
+.tag {
+  display: inline-block;
+  font: 700 16px/1 'JetBrains Mono', monospace;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: var(--gray-soft);
+  color: var(--muted);
+}
+.tag.accent { background: var(--accent-soft); color: var(--accent-ink); }
+.tag.green { background: var(--green-soft); color: var(--green); }
+.tag.dark { background: var(--ink); color: #FBF7F0; }
+.cut {
+  position: absolute; z-index: 4;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--bg); border: 2.5px solid var(--accent);
+  color: var(--accent); font: 800 22px/35px 'Inter', sans-serif; text-align: center;
+  transform: translate(-50%, -50%);
+}
+.ok { color: var(--green); font-weight: 800; }
+.no { color: var(--accent); font-weight: 800; }
+
+/* Panels for side-by-side comparisons */
+.panel {
+  position: relative;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 24px;
+  padding: 28px 30px;
+}
+.panel.good { border-color: var(--accent-border); }
+.panel.bad { background: var(--gray-soft); }
+.panel h3 { font: 800 30px/1.1 'Inter Display', 'Inter', sans-serif; letter-spacing: -0.02em; margin: 10px 0 18px; }
+.panel p { font: 500 22px/1.4 'Inter', sans-serif; color: var(--ink-2); margin: 0; }
+
+/* Code */
+.code {
+  position: relative; z-index: 2;
+  background: var(--dark);
+  color: #EDE6DA;
+  font: 500 22px/1.6 'JetBrains Mono', monospace;
+  border-radius: 18px;
+  padding: 24px 28px;
+  white-space: pre;
+  text-align: left;
+}
+.code .k { color: #F0A07A; }
+.code .s { color: #B9D89A; }
+.code .c { color: #8C857A; }
+.code .n { color: #E8C77A; }
+
+/* Timeline bars (for wait / pipeline diagrams) */
+.lane { display: flex; align-items: center; gap: 10px; height: 46px; }
+.lane .who { width: 150px; font: 600 20px 'JetBrains Mono', monospace; color: var(--ink-2); }
+.bar { height: 32px; border-radius: 9px; background: var(--accent-soft); border: 2px solid var(--accent-border); }
+.bar.green { background: var(--green-soft); border-color: var(--green-border); }
+.bar.dark { background: var(--ink); border-color: var(--ink); }
+.bar.idle { background: repeating-linear-gradient(45deg, #EFEAE2 0 8px, #E2DBCF 8px 16px); border-color: var(--line); }
+
+/* Wires overlay (filled by wires.js) */
+svg.wires { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 1; overflow: visible; }
+.wire-label { z-index: 3; }

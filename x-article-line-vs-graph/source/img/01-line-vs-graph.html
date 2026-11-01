@@ -1,0 +1,83 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .kicker { margin-bottom: 18px; }
+  .grid2 { align-items: stretch; }
+  .panel { padding: 22px 30px 22px; display: flex; flex-direction: column; }
+  .panel h3 { font-size: 32px; margin: 12px 0 18px; }
+  .panel.bad .tag { background: #E2DACE; color: #6F685F; }
+  .viz { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .caption { margin-top: 28px; }
+  .panel .tag { font-size: 18px; letter-spacing: .1em; padding: 8px 12px; }
+
+  /* Left: one chain + how full the context is after each step */
+  .steps { display: grid; grid-template-columns: auto 1fr; column-gap: 18px; row-gap: 32px; align-items: center; }
+  .steps .node { width: 112px; padding: 5px 0; font-size: 22px; border-radius: 12px; }
+  .steps .node.gray { border-color: #D3CABC; }
+  .steps .node.ghost { border-color: #C2B9AB; }
+  .dots { position: relative; top: -6px; }
+  .track { position: relative; height: 26px; border-radius: 8px; background: var(--card); border: 2px solid var(--line); overflow: hidden; display: flex; align-items: center; }
+  .fill { height: 100%; background: #D2C9BC; }
+  .fill.full { width: 100%; background: var(--muted); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px;
+               font: 700 18px/1 'JetBrains Mono', monospace; letter-spacing: .12em; color: #FBF7F0; }
+  .track .lbl { font: 600 18px/1 'JetBrains Mono', monospace; color: var(--muted); margin-left: 10px; letter-spacing: .02em; }
+  .note { margin-top: 10px; text-align: right; font: 600 22px/1.2 'Inter', sans-serif; color: var(--ink-2); }
+
+  /* Right: plan -> 9 subagents -> answer */
+  .gviz { align-items: center; }
+  .team { display: grid; grid-template-columns: repeat(3, auto); gap: 10px; padding: 12px; border: 2px dashed var(--accent-border); border-radius: 20px; }
+  .team .node { width: 58px; padding: 7px 0; font-size: 22px; }
+  .gviz .node.sm { padding: 8px 22px; }
+  .gap1 { height: 34px; }
+  .gap2 { position: relative; height: 56px; }
+  .gap2 .pill { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">Same job, two agents</div>
+  <div class="grid2">
+    <div class="panel bad">
+      <div><span class="tag">Line agent</span></div>
+      <h3>One head.<br>One file at a time.</h3>
+      <div class="viz">
+        <div class="steps">
+          <div class="node gray mono sm" id="f1">file 1</div>
+          <div class="track"><div class="fill" style="width:15%"></div><span class="lbl">context</span></div>
+          <div class="node gray mono sm" id="f2">file 2</div>
+          <div class="track"><div class="fill" style="width:30%"></div></div>
+          <div class="node gray mono sm" id="f3">file 3</div>
+          <div class="track"><div class="fill" style="width:45%"></div></div>
+          <div class="node ghost mono sm" id="f4"><span class="dots">...</span></div>
+          <div class="track"><div class="fill" style="width:75%"></div></div>
+          <div class="node gray mono sm" id="f7">file 7</div>
+          <div class="track"><div class="fill full">FULL</div></div>
+        </div>
+        <div class="note">forgets why it started</div>
+      </div>
+    </div>
+    <div class="panel good">
+      <div><span class="tag accent">Graph agent</span></div>
+      <h3>9 subagents.<br>9 clean heads.</h3>
+      <div class="viz gviz">
+        <div class="node sm" id="plan">plan</div>
+        <div class="gap1"></div>
+        <div class="team" id="team">
+          <div class="node accent mono sm">1</div><div class="node accent mono sm">2</div><div class="node accent mono sm">3</div>
+          <div class="node accent mono sm">4</div><div class="node accent mono sm">5</div><div class="node accent mono sm">6</div>
+          <div class="node accent mono sm">7</div><div class="node accent mono sm">8</div><div class="node accent mono sm">9</div>
+        </div>
+        <div class="gap2"><span class="pill green">answers only</span></div>
+        <div class="node sm dark" id="ans">answer</div>
+      </div>
+    </div>
+  </div>
+  <div class="caption"><b>One head fills up.</b> Nine clean heads don't.</div>
+</div>
+<script src="../design/wires.js"></script>
+<script>
+draw(() => {
+  [['f1','f2'],['f2','f3'],['f3','f4'],['f4','f7']].forEach(([a,b]) => wire(a, b, { color: 'muted', from: 'bottom', to: 'top', gap: 4 }));
+  wire('plan', 'team', { from: 'bottom', to: 'top', gap: 5 });
+  wire('team', 'ans', { from: 'bottom', to: 'top', color: 'green', gap: 5 });
+});
+</script>
+</body></html>

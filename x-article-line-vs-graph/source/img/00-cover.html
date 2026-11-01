@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .frame.cover { padding: 0 96px; display: flex; align-items: center; }
+  .cv { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+  .left { flex: 0 0 auto; }
+  .cover .kicker { font-size: 24px; margin-bottom: 26px; }
+  .cover .title { font-size: 96px; line-height: 1.0; letter-spacing: -0.032em; margin: 0 0 26px; }
+  .cover .sub { font-size: 32px; margin: 0; color: var(--muted); }
+
+  .right { flex: 0 0 auto; display: flex; flex-direction: column; gap: 46px; }
+  .grp { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .cover .tag { font-size: 22px; padding: 8px 12px; }
+  .grp .tag.inset { position: absolute; left: 0; top: 0; }
+
+  .b { width: 80px; height: 56px; padding: 0; border-radius: 14px; display: block; }
+  .cover .node.gray { border-color: #D3CABC; background: #ECE6DC; }
+  .chain { display: flex; gap: 42px; }
+  .dia { display: flex; align-items: center; gap: 164px; }
+  .stack { display: flex; flex-direction: column; gap: 14px; }
+  .stack .b { height: 50px; border-radius: 13px; }
+</style></head><body>
+<div class="frame wide cover" style="height:600px">
+  <div class="cv">
+    <div class="left">
+      <div class="kicker">Claude Code · dynamic workflows</div>
+      <h1 class="title">Line agent vs<br><em>graph agent</em></h1>
+      <p class="sub">Same Claude. Same job. Different shape.</p>
+    </div>
+    <div class="right">
+      <div class="grp">
+        <span class="tag">Line</span>
+        <div class="chain">
+          <div class="node gray b" id="l1"></div>
+          <div class="node gray b" id="l2"></div>
+          <div class="node gray b" id="l3"></div>
+          <div class="node gray b" id="l4"></div>
+          <div class="node gray b" id="l5"></div>
+        </div>
+      </div>
+      <div class="grp">
+        <span class="tag accent inset">Graph</span>
+        <div class="dia">
+          <div class="node b" id="g0"></div>
+          <div class="stack">
+            <div class="node accent b" id="g1"></div>
+            <div class="node accent b" id="g2"></div>
+            <div class="node accent b" id="g3"></div>
+            <div class="node accent b" id="g4"></div>
+          </div>
+          <div class="node dark b" id="g5"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../design/wires.js"></script>
+<script>
+draw(() => {
+  ['l1','l2','l3','l4'].forEach((id, i) => wire(id, 'l' + (i + 2), { color: 'muted' }));
+  ['g1','g2','g3','g4'].forEach(id => {
+    wire('g0', id, { from: 'right', to: 'left' });
+    wire(id, 'g5', { from: 'right', to: 'left', color: 'green' });
+  });
+});
+</script>
+</body></html>

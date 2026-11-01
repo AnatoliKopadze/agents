@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .title { margin-bottom: 32px; }
+  .part .tag { margin-bottom: 14px; font-size: 19px; letter-spacing: .1em; padding: 8px 12px; }
+  .chain { display: grid; grid-template-columns: auto 1.65fr auto 1.65fr auto 1fr auto; align-items: center; }
+  #c1 { grid-column: 1; } #c2 { grid-column: 3; } #c3 { grid-column: 5; } #c4 { grid-column: 7; }
+  .chain .node { font-size: 26px; padding: 13px 16px; }
+  .after { margin-top: 38px; }
+  .fan { display: flex; justify-content: space-between; align-items: center; }
+  .fan .col { gap: 12px; align-items: stretch; }
+  .fan .node { font-size: 26px; padding: 11px 22px; }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">02 · Redraw the line</div>
+  <h1 class="title">Cut the arrows that <em>carry nothing</em></h1>
+  <div class="part">
+    <div class="tag">Before: 4 steps in a row</div>
+    <div class="chain">
+      <div class="node gray" id="c1">GitHub<br>issues</div>
+      <div class="node gray" id="c2">Stripe<br>numbers</div>
+      <div class="node gray" id="c3">Support<br>tickets</div>
+      <div class="node gray" id="c4">Write<br>report</div>
+    </div>
+  </div>
+  <div class="part after">
+    <div class="tag accent">After: 3 at once, then 1</div>
+    <div class="fan">
+      <div class="col">
+        <div class="node accent" id="p1">GitHub issues</div>
+        <div class="node accent" id="p2">Stripe numbers</div>
+        <div class="node accent" id="p3">Support tickets</div>
+      </div>
+      <div class="node dark" id="w">Write report</div>
+    </div>
+  </div>
+  <div class="caption"><b>The line gets short and wide.</b><br>Same work, less waiting.</div>
+</div>
+<script src="../design/wires.js"></script>
+<script>
+draw(() => {
+  wire('c1', 'c2', { color: 'muted', dashed: true, cut: true });
+  wire('c2', 'c3', { color: 'muted', dashed: true, cut: true });
+  wire('c3', 'c4');
+  ['p1', 'p2', 'p3'].forEach(id => wire(id, 'w', { from: 'right', to: 'left' }));
+});
+</script>
+</body></html>

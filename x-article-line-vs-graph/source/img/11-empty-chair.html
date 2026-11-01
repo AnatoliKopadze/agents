@@ -1,0 +1,91 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .title { margin-bottom: 20px; }
+  .grid2 { align-items: stretch; gap: 26px; }
+  .panel { padding: 16px 26px 18px; display: flex; flex-direction: column; }
+  .panel .tag { font-size: 18px; letter-spacing: .1em; padding: 8px 12px; align-self: flex-start; }
+  .panel.bad .tag { background: #E2DACE; color: #6F685F; }
+  .panel h3 { font-size: 28px; margin: 9px 0 12px; white-space: nowrap; }
+  .viz { flex: 1; position: relative; }
+
+  /* left: the chain */
+  .chain { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  #sB, .crow { margin-top: 9px; }
+  #sD, #sE { margin-top: 0; }
+  .chain .node { font-size: 21px; padding: 2px 18px; border-radius: 12px; }
+  .chain .node.gray { border-color: #D3CABC; }
+  .chain .node.ghost { border-color: #C2B9AB; }
+  .crow { position: relative; }
+  .crow .cut { left: calc(100% + 30px); top: 50%; }
+
+  /* right: plan -> 6 subagents -> merge */
+  .fan { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+  .fan .node { font-size: 21px; padding: 4px 18px; border-radius: 12px; }
+  .seats { display: flex; gap: 9px; }
+  .seats .node { width: 46px; padding: 4px 0; }
+  .seats .node.ghost { width: auto; padding: 4px 10px; border-color: #C2B9AB; }
+  #merge { font-size: 22px; }
+
+  .strip { margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px;
+           background: var(--card); border: 2px solid var(--line); border-radius: 20px; padding: 11px 20px; }
+  .wt { font: 600 22px/1.2 'JetBrains Mono', monospace; color: var(--accent-ink); white-space: nowrap; }
+  .caption { margin-top: 22px; }
+  .caption .id { text-transform: none; letter-spacing: .02em; }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">10 · Contain the crash</div>
+  <h1 class="title">One crash. <em>One empty chair.</em></h1>
+  <div class="grid2">
+    <div class="panel bad">
+      <span class="tag">Line agent</span>
+      <h3>One crash stops everything</h3>
+      <div class="viz">
+        <div class="chain">
+          <div class="node gray" id="sA">step A</div>
+          <div class="node gray" id="sB">step B</div>
+          <div class="crow"><div class="node gray" id="sC">step C</div><span class="cut">✕</span></div>
+          <div class="node ghost" id="sD">step D · never runs</div>
+          <div class="node ghost" id="sE">step E · never runs</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel good">
+      <span class="tag accent">Graph agent</span>
+      <h3>The rest keep going</h3>
+      <div class="viz">
+        <div class="fan">
+          <div class="node" id="plan">plan</div>
+          <div class="seats">
+            <div class="node accent mono" id="w1">1</div>
+            <div class="node accent mono" id="w2">2</div>
+            <div class="node accent mono" id="w3">3</div>
+            <div class="node ghost mono" id="w4">null</div>
+            <div class="node accent mono" id="w5">5</div>
+            <div class="node accent mono" id="w6">6</div>
+          </div>
+          <div class="node green" id="merge">merge works with 5 of 6</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="strip">
+    <span class="pill">writing files at once?</span>
+    <span class="wt">isolation: 'worktree'</span>
+    <span class="pill green">own copy of the repo</span>
+  </div>
+  <div class="caption"><b><span class="id">.filter(Boolean)</span> clears the empty chair.</b><br>Build every merge to expect empty chairs.</div>
+</div>
+<script src="../design/wires.js"></script>
+<script>
+draw(() => {
+  const dense = () => { const ps = document.querySelectorAll('svg.wires > path'); ps[ps.length - 1].setAttribute('stroke-dasharray', '0.5 7'); };
+  wire('sA', 'sB', { color: 'muted', from: 'bottom', to: 'top', gap: 3, width: 2.5 });
+  wire('sB', 'sC', { color: 'muted', from: 'bottom', to: 'top', gap: 3, width: 2.5 });
+  wire('sC', 'sD', { color: 'muted', from: 'bottom', to: 'top', gap: 6, width: 3.5, head: false }); dense();
+  wire('sD', 'sE', { color: 'muted', from: 'bottom', to: 'top', gap: 6, width: 3.5, head: false }); dense();
+  ['w1','w2','w3','w4','w5','w6'].forEach(id => wire('plan', id, { from: 'bottom', to: 'top', gap: 4, width: 2.5 }));
+  ['w1','w2','w3','w5','w6'].forEach(id => wire(id, 'merge', { from: 'bottom', to: 'top', color: 'green', gap: 4, width: 2.5 }));
+});
+</script>
+</body></html>

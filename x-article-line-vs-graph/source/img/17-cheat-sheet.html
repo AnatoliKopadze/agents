@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .title { font-size: 60px; margin-bottom: 0; }
+  .sheet { display: grid; grid-template-columns: 352px 1fr; grid-template-rows: repeat(12, auto); column-gap: 18px; margin-top: 36px; }
+  .colp { grid-row: 1 / span 12; display: grid; grid-template-rows: subgrid; border: 2px solid var(--line); border-radius: 24px; overflow: hidden; }
+  .colp.l { background: var(--gray-soft); }
+  .colp.r { background: var(--card); border-color: var(--accent-border); }
+  .cell { display: flex; align-items: center; min-height: 76px; padding: 0 24px; font: 500 23px/1.25 'Inter', sans-serif; white-space: nowrap; }
+  .cell + .cell { border-top: 1.5px solid var(--line); }
+  .colp.r .cell + .cell { border-top-color: #F0DCCF; }
+  .colp.l .cell { color: #7C756B; }
+  .colp.r .cell { color: var(--ink); font-weight: 600; }
+  .hd { min-height: 72px; }
+  .colp.l .tag { background: #E2DACE; color: #6F685F; }
+  .tag { font-size: 18px; }
+  .dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); margin-right: 16px; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: .9em; font-weight: 600; color: var(--accent-ink); }
+  .caption { margin-top: 36px; }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">Save this</div>
+  <h1 class="title">Line agent vs <em>graph agent</em></h1>
+  <div class="sheet">
+    <div class="colp l">
+      <div class="cell hd"><span class="tag">Line agent</span></div>
+      <div class="cell">Waits after every step</div>
+      <div class="cell">Gets essays back</div>
+      <div class="cell">Pays Claude to glue</div>
+      <div class="cell">Reads files one by one</div>
+      <div class="cell">Decides on a whim</div>
+      <div class="cell">Trusts its first answer</div>
+      <div class="cell">One crash stops it</div>
+      <div class="cell">Stops at a number</div>
+      <div class="cell">Top model for everything</div>
+      <div class="cell">Time = sum of all steps</div>
+      <div class="cell">You draw it by hand</div>
+    </div>
+    <div class="colp r">
+      <div class="cell hd"><span class="tag accent">Graph agent</span></div>
+      <div class="cell"><i class="dot"></i><span>Waits only for real handoffs</span></div>
+      <div class="cell"><i class="dot"></i><span>Gets a filled-in form (<code>schema</code>)</span></div>
+      <div class="cell"><i class="dot"></i><span>Glues with code: 0 tokens</span></div>
+      <div class="cell"><i class="dot"></i><span><code>parallel()</code>: 1 subagent per file</span></div>
+      <div class="cell"><i class="dot"></i><span>Routes with <code>if</code> / <code>switch</code></span></div>
+      <div class="cell"><i class="dot"></i><span>Skeptics try to kill it</span></div>
+      <div class="cell"><i class="dot"></i><span>One empty chair: <code>.filter(Boolean)</code></span></div>
+      <div class="cell"><i class="dot"></i><span>Stops after 2 empty rounds</span></div>
+      <div class="cell"><i class="dot"></i><span>Cheap model for chores</span></div>
+      <div class="cell"><i class="dot"></i><span>Time = slowest path: <code>pipeline()</code></span></div>
+      <div class="cell"><i class="dot"></i><span>Claude draws it: <code>"use a workflow"</code></span></div>
+    </div>
+  </div>
+</div>
+<script src="../design/wires.js"></script>
+<script>done();</script>
+</body></html>

@@ -1,0 +1,149 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .title { margin-bottom: 36px; }
+  .jobs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { padding: 22px 18px 22px; }
+  .card h3 { font: 800 28px/1.1 'Inter Display', 'Inter', sans-serif; letter-spacing: -0.02em; margin: 0 0 8px; color: var(--ink); }
+  .panel p.ln { margin: 0; font: 500 21px/1.45 'Inter', sans-serif; color: var(--ink-2); white-space: nowrap; }
+  .ln .a { color: var(--accent); font-weight: 700; }
+  .ln .m { color: var(--muted); }
+  .ln .cmd { color: var(--accent-ink); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 19px; }
+
+  /* mini graphs: small shapes, absolute inside a fixed box */
+  .mini { position: relative; height: 84px; margin-bottom: 18px; }
+  .mini i { position: absolute; display: block; z-index: 2; border: 2px solid; border-radius: 8px; }
+  .sq { width: 26px; height: 26px; }
+  .dot { width: 18px; height: 18px; border-radius: 50% !important; }
+  .acc { background: var(--accent-soft); border-color: var(--accent-border) !important; }
+  .grn { background: var(--green-soft); border-color: var(--green-border) !important; }
+  .drk { background: var(--ink); border-color: var(--ink) !important; }
+  .neu { background: var(--card); border-color: #CFC6B8 !important; }
+  .gry { background: var(--gray-soft); border-color: #CFC6B8 !important; }
+  .ghost { background: transparent; border-style: dashed !important; border-color: #C4BBAD !important; }
+  .mini i.anc { width: 0; height: 0; border: 0; }
+  .mini i.pip { width: 8px; height: 8px; border: 0; border-radius: 50%; background: var(--accent); }
+  .caption { margin-top: 34px; }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">6 jobs for a graph agent</div>
+  <h1 class="title">Build one of these <em>this week</em></h1>
+  <div class="jobs">
+
+    <!-- 1 security sweep: routes -> skeptics gate -> report -->
+    <div class="panel card">
+      <div class="mini">
+        <i class="sq acc" id="a1" style="left:0;top:0"></i>
+        <i class="sq acc" id="a2" style="left:0;top:29px"></i>
+        <i class="sq acc" id="a3" style="left:0;top:58px"></i>
+        <i class="grn" id="agate" style="left:100px;top:0;width:24px;height:84px"></i>
+        <i class="anc" id="ag1" style="left:100px;top:13px"></i>
+        <i class="anc" id="ag2" style="left:100px;top:42px"></i>
+        <i class="anc" id="ag3" style="left:100px;top:71px"></i>
+        <i class="sq drk" id="arep" style="right:0;top:28px;width:28px;height:28px"></i>
+      </div>
+      <h3>Security sweep</h3>
+      <p class="ln">1 subagent per route<br><span class="a">→</span> skeptics <span class="a">→</span> report</p>
+    </div>
+
+    <!-- 2 cited research: question -> searches -> verify -> write -->
+    <div class="panel card">
+      <div class="mini">
+        <i class="dot neu" id="bq" style="left:0;top:33px"></i>
+        <i class="dot acc" id="b1" style="left:68px;top:4px"></i>
+        <i class="dot acc" id="b2" style="left:68px;top:33px"></i>
+        <i class="dot acc" id="b3" style="left:68px;top:62px"></i>
+        <i class="sq grn" id="bv" style="left:138px;top:29px"></i>
+        <i class="sq drk" id="bw" style="right:0;top:28px;width:28px;height:28px"></i>
+      </div>
+      <h3>Research with sources</h3>
+      <p class="ln"><span class="cmd">/deep-research</span>: search<br><span class="a">→</span> verify <span class="a">→</span> write</p>
+    </div>
+
+    <!-- 3 port: file -> tests -> done, failures loop back -->
+    <div class="panel card">
+      <div class="mini">
+        <i class="sq acc" id="cf" style="left:0;top:6px"></i>
+        <i class="sq grn" id="ct" style="left:104px;top:6px"></i>
+        <i class="sq drk" id="cd" style="right:0;top:5px;width:28px;height:28px"></i>
+        <i class="dot gry" id="cx" style="left:43px;top:58px"></i>
+      </div>
+      <h3>File-by-file port</h3>
+      <p class="ln">1 per file <span class="a">→</span> tests<br><span class="a">→</span> retry failures</p>
+    </div>
+
+    <!-- 4 diff review: router -> small: 1 pass / big: 3 lenses -> judge -->
+    <div class="panel card">
+      <div class="mini">
+        <i class="sq neu" id="dd" style="left:0;top:29px"></i>
+        <i class="sq acc" id="dp" style="left:100px;top:0"></i>
+        <i class="acc" id="dl" style="left:84px;top:56px;width:62px;height:26px;border-radius:9px"></i>
+        <i class="pip" style="left:96px;top:65px"></i>
+        <i class="pip" style="left:111px;top:65px"></i>
+        <i class="pip" style="left:126px;top:65px"></i>
+        <i class="sq drk" id="dj" style="right:0;top:55px;width:28px;height:28px"></i>
+      </div>
+      <h3>Diff review</h3>
+      <p class="ln"><span class="m">small:</span> 1 pass<br><span class="m">big:</span> 3 lenses + judge</p>
+    </div>
+
+    <!-- 5 weekly scan: many sources -> rank at a barrier -> digest -->
+    <div class="panel card">
+      <div class="mini">
+        <i class="dot acc" id="e1" style="left:10px;top:2px"></i>
+        <i class="dot acc" id="e2" style="left:47px;top:2px"></i>
+        <i class="dot acc" id="e3" style="left:85px;top:2px"></i>
+        <i class="dot acc" id="e4" style="left:122px;top:2px"></i>
+        <i class="acc" id="er" style="left:0;top:54px;width:150px;height:24px;border-radius:9px"></i>
+        <i class="anc" id="ea1" style="left:19px;top:54px"></i>
+        <i class="anc" id="ea2" style="left:56px;top:54px"></i>
+        <i class="anc" id="ea3" style="left:94px;top:54px"></i>
+        <i class="anc" id="ea4" style="left:131px;top:54px"></i>
+        <i class="sq drk" id="eg" style="right:0;top:52px;width:28px;height:28px"></i>
+      </div>
+      <h3>Weekly scan</h3>
+      <p class="ln">many sources<br><span class="a">→</span> rank <span class="a">→</span> summary</p>
+    </div>
+
+    <!-- 6 bug hunt: rounds find less and less, 2 empty rounds -> stop -->
+    <div class="panel card">
+      <div class="mini">
+        <i class="sq neu" id="f1" style="left:0;top:29px"></i>
+        <i class="pip" style="left:4px;top:38px"></i><i class="pip" style="left:13px;top:33px"></i><i class="pip" style="left:13px;top:43px"></i>
+        <i class="sq neu" id="f2" style="left:53px;top:29px"></i>
+        <i class="pip" style="left:62px;top:38px"></i>
+        <i class="sq ghost" id="f3" style="left:106px;top:29px"></i>
+        <i class="sq ghost" id="f4" style="left:159px;top:29px"></i>
+        <i class="sq drk" id="fs" style="right:0;top:28px;width:28px;height:28px"></i>
+      </div>
+      <h3>Bug hunt</h3>
+      <p class="ln">find <span class="a">→</span> verify<br><span class="a">→</span> loop until dry</p>
+    </div>
+
+  </div>
+  <div class="caption"><b>Six jobs. Same few moves.</b><br>Fan out, route, check, merge, loop.</div>
+</div>
+<script src="../design/wires.js"></script>
+<script>
+draw(() => {
+  const W = (a, b, o = {}) => wire(a, b, Object.assign({ width: 2.5, gap: 4, from: 'right', to: 'left' }, o));
+  // 1
+  W('a1', 'ag1'); W('a2', 'ag2'); W('a3', 'ag3');
+  W('agate', 'arep', { color: 'green' });
+  // 2
+  ['b1', 'b2', 'b3'].forEach(id => { W('bq', id); W(id, 'bv'); });
+  W('bv', 'bw', { color: 'green' });
+  // 3
+  W('cf', 'ct'); W('ct', 'cd', { color: 'green' });
+  W('ct', 'cx', { from: 'bottom', to: 'right', color: 'muted', head: false });
+  W('cx', 'cf', { from: 'left', to: 'bottom' });
+  // 4
+  W('dd', 'dp'); W('dd', 'dl'); W('dl', 'dj');
+  // 5
+  [1, 2, 3, 4].forEach(n => W('e' + n, 'ea' + n, { from: 'bottom', to: 'top' }));
+  W('er', 'eg');
+  // 6
+  W('f1', 'f2'); W('f2', 'f3', { color: 'muted' }); W('f3', 'f4', { color: 'muted' }); W('f4', 'fs', { color: 'green' });
+});
+</script>
+</body></html>

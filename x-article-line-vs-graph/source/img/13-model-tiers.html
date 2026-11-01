@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .title { margin-bottom: 44px; }
+  .dia { display: flex; align-items: center; justify-content: space-between; }
+  .chores { position: relative; display: grid; grid-template-columns: repeat(3, auto); gap: 12px 8px;
+            padding: 30px 14px 14px; border: 2px dashed var(--accent-border); border-radius: 22px; }
+  .chores .node { font-size: 22px; padding: 9px 11px; border-radius: 12px; }
+  .chores .pill { position: absolute; left: 50%; top: 0; transform: translate(-50%, -50%); z-index: 3;
+                  font-size: 20px; padding: 5px 14px; }
+  .anc { position: absolute; right: -2px; width: 0; height: 2px; }
+  #final { padding: 46px 28px; font-size: 34px; border-radius: 22px; }
+  #final small { font-size: 21px; margin-top: 10px; }
+
+  .strip { margin-top: 36px; display: flex; align-items: center; gap: 18px; background: var(--gray-soft); border: 2px solid var(--line); border-radius: 16px; padding: 9px 16px; }
+  .strip .tag { background: #E2DACE; color: #6F685F; font-size: 18px; letter-spacing: .1em; padding: 7px 12px; }
+  .strip .t { font: 600 22px/1.3 'Inter', sans-serif; color: var(--ink-2); }
+  .caption { margin-top: 30px; }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">12 · Tier the models</div>
+  <h1 class="title">Pay for <em>judgment</em>, not chores</h1>
+  <div class="dia">
+    <div class="chores" id="chores">
+      <span class="pill accent mono">model: 'haiku' · effort: 'low'</span>
+      <div class="node accent">pull a field</div><div class="node accent">tag a ticket</div><div class="node accent" id="r1">check a link</div>
+      <div class="node accent">read a file</div><div class="node accent">pull a field</div><div class="node accent" id="r2">tag a ticket</div>
+      <div class="node accent">check a link</div><div class="node accent">read a file</div><div class="node accent" id="r3">pull a field</div>
+      <div class="node accent">tag a ticket</div><div class="node accent">check a link</div><div class="node accent" id="r4">read a file</div>
+    </div>
+    <div class="node dark" id="final">Final report<small>your best model</small></div>
+  </div>
+  <div class="strip"><span class="tag">Line agent</span><span class="t">every step on the top model</span></div>
+  <div class="caption"><b>Every subagent uses your session model</b><br>unless the script says otherwise.</div>
+</div>
+<script src="../design/wires.js"></script>
+<script>
+draw(() => {
+  // one anchor on the group's right edge per row, so a few arrows leave the group (not 12)
+  const g = document.getElementById('chores'), gr = g.getBoundingClientRect();
+  ['r1', 'r2', 'r3', 'r4'].forEach((id, i) => {
+    const r = document.getElementById(id).getBoundingClientRect();
+    const a = document.createElement('i');
+    a.className = 'anc'; a.id = 'a' + i;
+    a.style.top = (r.top + r.height / 2 - gr.top - 1) + 'px';
+    g.appendChild(a);
+  });
+  for (let i = 0; i < 4; i++) wire('a' + i, 'final', { from: 'right', to: 'left' });
+});
+</script>
+</body></html>

@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .stage { padding: 6px 0 0; }
+  .mid { gap: 14px; }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">07 · The diamond</div>
+  <h1 class="title">Split. Work. <em>Merge.</em></h1>
+  <p class="sub">The shape behind almost every big agent job.</p>
+  <div class="stage">
+    <div class="col"><div class="node" id="split">Split<small>the job list</small></div></div>
+    <div class="col mid">
+      <div class="node accent mono sm" id="w1">file 1</div>
+      <div class="node accent mono sm" id="w2">file 2</div>
+      <div class="node accent mono sm" id="w3">file 3</div>
+      <div class="node accent mono sm" id="w4">file 4</div>
+      <div class="node accent mono sm" id="w5">file 5</div>
+    </div>
+    <div class="col"><div class="node" id="reduce">Reduce<small>code · 0 tokens</small></div></div>
+    <div class="col"><div class="node dark" id="synth">Write<small>1 subagent</small></div></div>
+  </div>
+  <div class="caption"><b>Fan out → reduce → synthesize.</b><br>Swap the list and the prompts. Keep the shape.</div>
+</div>
+<script src="../design/wires.js"></script>
+<script>
+draw(() => {
+  ['w1','w2','w3','w4','w5'].forEach(id => { wire('split', id, {from:'right', to:'left'}); wire(id, 'reduce', {from:'right', to:'left'}); });
+  wire('reduce', 'synth', { color: 'green' });
+});
+</script>
+</body></html>

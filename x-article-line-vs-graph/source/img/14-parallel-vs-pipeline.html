@@ -1,0 +1,104 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .title { margin-bottom: 18px; }
+  .title .mono { font-weight: 800; letter-spacing: -0.04em; }
+  .legend { display: flex; align-items: center; gap: 12px; margin-bottom: 31px; }
+  .legend .pill { font-size: 20px; padding: 5px 14px; }
+  .pill.idle { background: repeating-linear-gradient(45deg, #EFEAE2 0 8px, #E2DBCF 8px 16px); color: var(--ink-2); }
+  .legend .time { margin-left: auto; font: 600 20px/1 'JetBrains Mono', monospace; color: var(--muted); }
+
+  .panel { padding: 28px 26px 14px; }
+  .panel + .panel { margin-top: 30px; }
+  .ptag { position: absolute; top: 0; left: 22px; transform: translateY(-50%); z-index: 4;
+          font: 700 18px/1 'JetBrains Mono', monospace; padding: 8px 12px; border-radius: 8px; white-space: nowrap; }
+  .ptag.gray { background: #E2DACE; color: #5F5850; }
+  .ptag.accent { background: var(--accent-soft); color: var(--accent-ink); border: 1.5px solid var(--accent-border); }
+  .lane { height: 42px; }
+  .lane .who { width: 92px; flex: none; font-size: 22px; }
+  .track { position: relative; flex: 1; height: 32px; }
+  .track .bar { position: absolute; top: 0; }
+  .vline { position: absolute; z-index: 3; width: 0; }
+  .vline.wall { border-left: 3px dashed var(--ink-2); }
+  .vline.done { border-left: 3px solid var(--ink); }
+  .mark { position: absolute; top: 0; z-index: 4; transform: translate(-50%, -50%); white-space: nowrap; }
+  .mark.wall { font-size: 19px; background: var(--card); border-color: var(--ink-2); color: var(--ink); padding: 5px 12px; }
+  .mark.done { font: 700 19px/1.2 'JetBrains Mono', monospace; background: var(--ink); color: #FBF7F0; padding: 6px 13px; border-radius: 999px; }
+  .caption { margin-top: 28px; }
+  .caption .id { text-transform: none; letter-spacing: .02em; }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">13 · Shape = time</div>
+  <h1 class="title"><span class="mono">parallel()</span> vs <em class="mono">pipeline()</em></h1>
+  <div class="legend">
+    <span class="pill accent">stage 1</span>
+    <span class="pill green">stage 2</span>
+    <span class="pill idle">waiting</span>
+    <span class="time">time →</span>
+  </div>
+
+  <div class="panel" id="p1">
+    <span class="ptag gray">parallel(): a wall after each stage</span>
+    <div class="lane"><span class="who">item A</span><div class="track" data-k="A"></div></div>
+    <div class="lane"><span class="who">item B</span><div class="track" data-k="B"></div></div>
+    <div class="lane"><span class="who">item C</span><div class="track" data-k="C"></div></div>
+  </div>
+
+  <div class="panel good" id="p2">
+    <span class="ptag accent">pipeline(): no wall</span>
+    <div class="lane"><span class="who">item A</span><div class="track" data-k="A"></div></div>
+    <div class="lane"><span class="who">item B</span><div class="track" data-k="B"></div></div>
+    <div class="lane"><span class="who">item C</span><div class="track" data-k="C"></div></div>
+  </div>
+
+  <div class="caption"><b>More than one stage? Default to <span class="id">pipeline()</span>.</b><br>Use a wall only when a step needs every result.</div>
+</div>
+<script src="../design/wires.js"></script>
+<script>
+draw(() => {
+  // one shared time scale for both panels (example durations, not measurements)
+  const U = 76;      // px per time unit
+  const GAP = 3;     // half gap between touching bars
+  const plans = {
+    p1: { A: [['s1', 0, 1.5], ['idle', 1.5, 5], ['s2', 5, 9]],
+          B: [['s1', 0, 3],   ['idle', 3, 5],   ['s2', 5, 7]],
+          C: [['s1', 0, 5],   ['s2', 5, 6.5]],
+          lines: [['wall', 5], ['done', 9]] },
+    p2: { A: [['s1', 0, 1.5], ['s2', 1.5, 5.5]],
+          B: [['s1', 0, 3],   ['s2', 3, 5]],
+          C: [['s1', 0, 5],   ['s2', 5, 6.5]],
+          lines: [['done', 6.5]] },
+  };
+  const cls = { s1: 'bar', s2: 'bar green', idle: 'bar idle' };
+  for (const [pid, plan] of Object.entries(plans)) {
+    const panel = document.getElementById(pid), pr = panel.getBoundingClientRect();
+    const tracks = panel.querySelectorAll('.track');
+    tracks.forEach(t => {
+      for (const [kind, a, b] of plan[t.dataset.k]) {
+        const d = document.createElement('div');
+        d.className = cls[kind];
+        d.style.left = (a * U + GAP) + 'px';
+        d.style.width = ((b - a) * U - 2 * GAP) + 'px';
+        t.appendChild(d);
+      }
+    });
+    const t0 = tracks[0].getBoundingClientRect(), tN = tracks[tracks.length - 1].getBoundingClientRect();
+    const x0 = t0.left - pr.left - 2;           // panel border is 2px
+    for (const [kind, at] of plan.lines) {
+      const x = x0 + at * U;
+      const v = document.createElement('div');
+      v.className = 'vline ' + kind;
+      v.style.left = (x - 1.5) + 'px';
+      v.style.top = '14px';
+      v.style.height = (tN.bottom - pr.top - 2 + 8 - 14) + 'px';
+      panel.appendChild(v);
+      const m = document.createElement('span');
+      m.className = kind === 'wall' ? 'pill mark wall' : 'mark done';
+      m.textContent = kind;
+      m.style.left = x + 'px';
+      panel.appendChild(m);
+    }
+  }
+});
+</script>
+</body></html>

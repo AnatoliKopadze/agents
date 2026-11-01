@@ -1,0 +1,54 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .title { margin-bottom: 28px; }
+  .cmp { display: grid; grid-template-columns: 1fr 1.34fr; gap: 28px; }
+  .cmp .tag { font-size: 18px; letter-spacing: .07em; padding: 7px 11px; }
+  .cmp .panel { display: flex; flex-direction: column; align-items: flex-start; padding: 26px 30px; }
+  .cmp .panel h3 { margin: 10px 0 16px; }
+  .panel.bad .tag { background: #E2D9CB; color: #7A7369; }
+  .doc { align-self: stretch; flex: 1; position: relative; }
+  .foot { margin-top: 16px; }
+  /* essay: a page of fake text lines, with two more pages behind it */
+  .sheet { position: absolute; inset: 0; background: var(--card); border: 2px solid var(--line); border-radius: 14px; }
+  .sheet.s2 { transform: translate(12px, 12px); opacity: .55; }
+  .sheet.s1 { transform: translate(6px, 6px); opacity: .8; }
+  .page { position: relative; z-index: 1; height: calc(100% - 12px); width: calc(100% - 12px); background: var(--card); border: 2px solid var(--line); border-radius: 14px; padding: 22px 22px; display: flex; flex-direction: column; gap: 13px; }
+  .page i { display: block; height: 14px; border-radius: 7px; background: #DCD3C5; }
+  .page i.p { margin-top: 10px; }
+  .code { font-size: 22px; line-height: 1.5; padding: 18px 24px; }
+  .note { font: 600 22px/30px 'Inter', sans-serif; color: var(--ink-2); }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">03 · Give every box a form</div>
+  <h1 class="title">Essays vs a <em>filled-in form</em></h1>
+  <div class="cmp">
+    <div class="panel bad">
+      <span class="tag">Line agent</span>
+      <h3>You get an essay</h3>
+      <div class="doc">
+        <div class="sheet s2"></div><div class="sheet s1"></div>
+        <div class="page">
+          <i style="width:94%"></i><i style="width:100%"></i><i style="width:86%"></i><i style="width:52%"></i>
+          <i class="p" style="width:97%"></i><i style="width:90%"></i><i style="width:64%"></i>
+        </div>
+      </div>
+      <div class="note foot">now parse 20 of these</div>
+    </div>
+    <div class="panel good">
+      <span class="tag accent">Graph agent</span>
+      <h3>You get a form</h3>
+      <div class="code doc">{
+  <span class="k">file</span>: <span class="s">"src/auth.ts"</span>,
+  <span class="k">line</span>: <span class="n">42</span>,
+  <span class="k">problem</span>: <span class="s">"no auth check"</span>,
+  <span class="k">severity</span>: <span class="s">"high"</span>
+}</div>
+      <span class="tag green foot">schema checked · retried if wrong</span>
+    </div>
+  </div>
+  <div class="caption"><b>In: everything it needs. Out: a fixed shape.</b><br>One job per box.</div>
+</div>
+<script src="../design/wires.js"></script>
+<script>done();</script>
+</body></html>

@@ -1,0 +1,78 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .title { margin-bottom: 26px; }
+  .band .tag { font-size: 19px; letter-spacing: .1em; padding: 8px 12px; margin-bottom: 12px; }
+  .band + .band { margin-top: 28px; }
+  .res { display: flex; flex-direction: column; gap: 8px; }
+  .res .node { font-size: 22px; padding: 5px 14px; border-radius: 12px; }
+  .res .node.gray { border-color: #D3CABC; }
+
+  /* top row: results -> subagent -> cost */
+  .brow.top { display: flex; align-items: center; justify-content: space-between; }
+  #sub small { font-size: 19px; }
+  .out { font-size: 22px; padding: 7px 16px; border-width: 2px; }
+  .out.gray { background: var(--gray-soft); border-color: #D3CABC; color: #6F685F; }
+
+  /* bottom row: results -> code -> green result */
+  .brow.bot { display: grid; grid-template-columns: auto 1fr; column-gap: 0; align-items: start; }
+  .brow.bot .res { align-self: start; }
+  .glue { display: flex; flex-direction: column; align-items: flex-end; gap: 22px; }
+  .code { font-size: 20px; line-height: 1.55; padding: 20px 22px; font-variant-ligatures: none; font-feature-settings: "calt" 0, "liga" 0; }
+  .caption { margin-top: 32px; }
+  #codeout { position: absolute; bottom: 0; width: 0; height: 0; }
+</style></head><body>
+<div class="frame">
+  <div class="kicker">04 · Glue with code</div>
+  <h1 class="title">Glue is <em>code</em>, not a subagent</h1>
+
+  <div class="band">
+    <span class="tag">Line agent</span>
+    <div class="brow top">
+      <div class="res">
+        <div class="node gray mono" id="ta">results A</div>
+        <div class="node gray mono" id="tb">results B</div>
+        <div class="node gray mono" id="tc">results C</div>
+      </div>
+      <div class="node gray" id="sub">Subagent<small>"combine these"</small></div>
+      <div class="pill out gray" id="tout">tokens, time, maybe wrong</div>
+    </div>
+  </div>
+
+  <div class="band">
+    <span class="tag accent">Graph agent</span>
+    <div class="brow bot">
+      <div class="res" id="bres">
+        <div class="node accent mono" id="ba">results A</div>
+        <div class="node accent mono" id="bb">results B</div>
+        <div class="node accent mono" id="bc">results C</div>
+      </div>
+      <div class="glue">
+        <div class="code" id="code"><span class="k">const</span> all = results.filter(Boolean).flat()
+<span class="k">const</span> unique = dedupe(all)
+<span class="k">const</span> real = unique.filter(f => f.severity !== <span class="s">'low'</span>)<i id="codeout"></i></div>
+        <div class="pill green out" id="bout">0 tokens · same every time</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="caption"><b>Pay Claude to think.</b> Let code do the gluing.</div>
+</div>
+<script src="../design/wires.js"></script>
+<script>
+draw(() => {
+  // center the results column on the code block
+  const code = document.getElementById('code'), res = document.getElementById('bres');
+  res.style.marginTop = ((code.offsetHeight - res.offsetHeight) / 2) + 'px';
+  // arrow leaves the code right above the green pill
+  const pill = document.getElementById('bout'), a = document.getElementById('codeout');
+  const cr = code.getBoundingClientRect(), pr = pill.getBoundingClientRect();
+  a.style.left = (pr.left - 52 - cr.left) + 'px';
+
+  ['ta', 'tb', 'tc'].forEach(id => wire(id, 'sub', { color: 'muted', from: 'right', to: 'left' }));
+  wire('sub', 'tout', { color: 'muted', from: 'right', to: 'left' });
+  ['ba', 'bb', 'bc'].forEach(id => wire(id, 'code', { from: 'right', to: 'left' }));
+  wire('codeout', 'bout', { color: 'green', from: 'bottom', to: 'left', curve: 0.55 });
+});
+</script>
+</body></html>
