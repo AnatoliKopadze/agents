@@ -182,3 +182,67 @@ body { -webkit-font-smoothing: antialiased; }
 /* Wires overlay (filled by wires.js) */
 svg.wires { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 1; overflow: visible; }
 .wire-label { z-index: 3; }
+
+/* ===== Dark theme (style A). Overrides the light defaults above. ===== */
+:root {
+  --bg: #0F0F12;
+  --card: #18181D;
+  --ink: #F5F2EC;
+  --ink-2: #D2CDC4;
+  --muted: #8E8B95;
+  --line: #2E2E36;
+  --accent: #FF6B2C;
+  --accent-ink: #FF9562;
+  --accent-soft: #2B1A12;
+  --accent-border: #8C3B17;
+  --green: #5BE38E;
+  --green-soft: #12261A;
+  --green-border: #2F7A4C;
+  --gray-soft: #1D1D23;
+  --dark: #09090B;
+  --on-accent: #140A05;
+  --wire-accent: #FF6B2C;
+  --wire-green: #5BE38E;
+  --wire-muted: #4D4C57;
+  --wire-ink: #F5F2EC;
+}
+html, body { background: var(--bg); }
+.frame {
+  background-color: var(--bg);
+  background-image: radial-gradient(#24242B 1.3px, transparent 1.3px);
+  background-size: 24px 24px;
+  background-position: 12px 12px;
+  color: var(--ink);
+}
+.node { background: var(--card); border-color: var(--line); color: var(--ink); }
+.node small { color: var(--muted); }
+.node.accent { background: var(--accent-soft); border-color: var(--accent-border); color: var(--accent-ink); }
+.node.accent small { color: var(--accent-ink); }
+.node.green { background: var(--green-soft); border-color: var(--green-border); color: var(--green); }
+.node.green small { color: var(--green); }
+.node.dark { background: var(--accent); border-color: var(--accent); color: var(--on-accent); box-shadow: 0 0 0 6px rgba(255,107,44,.13), 0 10px 36px rgba(255,107,44,.22); }
+.node.dark small { color: #3D1C0B; }
+.node.gray { background: #1A1A1F; border-color: #2C2C34; color: #75727D; }
+.node.ghost { border-color: #45454F; color: var(--muted); }
+.pill { background: var(--bg); border-color: var(--line); color: var(--ink-2); }
+.pill.accent { background: var(--accent-soft); border-color: var(--accent-border); color: var(--accent-ink); }
+.pill.green { background: var(--green-soft); border-color: var(--green-border); color: var(--green); }
+.tag { background: #24242B; color: #A3A0AA; }
+.tag.accent { background: var(--accent-soft); color: var(--accent-ink); }
+.tag.green { background: var(--green-soft); color: var(--green); }
+.tag.dark { background: var(--accent); color: var(--on-accent); }
+.panel { background: var(--card); border-color: var(--line); }
+.panel.bad { background: #141418; }
+.panel.good { border-color: var(--accent-border); }
+.panel p { color: var(--ink-2); }
+.code { background: var(--dark); border: 1.5px solid var(--line); color: #EDE6DA; }
+.code .k { color: #FF9562; }
+.code .s { color: #8FE3A8; }
+.code .n { color: #F5C66B; }
+.bar { background: var(--accent-soft); border-color: var(--accent-border); }
+.bar.green { background: var(--green-soft); border-color: var(--green-border); }
+.bar.dark { background: var(--accent); border-color: var(--accent); }
+.bar.idle { background: repeating-linear-gradient(45deg, #1C1C22 0 8px, #2A2A32 8px 16px); border-color: var(--line); }
+.cut { background: var(--bg); }
+.caption { color: var(--muted); }
+.caption b { color: var(--accent); }

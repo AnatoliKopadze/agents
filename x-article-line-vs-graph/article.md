@@ -32,7 +32,7 @@ Same Claude. Same job. Different shape.
 
 ![01-line-vs-graph](images/01-line-vs-graph.png)
 
-> If you build with Claude Code, follow my Substack. I post breakdowns like this one there: movez.substack.com
+> I write about Claude Code in plain English. If you want the next breakdown in your feed, follow me here.
 
 Claude Code can build the graph agent for you. The feature is called **dynamic workflows**.
 
@@ -249,6 +249,8 @@ Its name is **fan out → reduce → synthesize.**
 The line agent asks "what's the next step?"
 
 The graph agent asks "where does the work split, and where does it meet again?" That question works for 5 files and for 500.
+
+> Halfway. If this is already useful, follow me now. Below: 7 more differences, 6 prompts you can paste and the cheat sheet.
 
 ---
 
@@ -518,4 +520,6 @@ This week, take one agent you already have and cut one arrow that carries nothin
 
 Bookmark this, or save the cheat sheet above. You'll want it the next time you write "and then".
 
-> If this was useful, follow me here for more Claude Code breakdowns. I also post them on my Substack: movez.substack.com
+![18-follow](images/18-follow.png)
+
+> If this was useful, follow me here for the next breakdown. You can also get them by email on my Substack: movez.substack.com

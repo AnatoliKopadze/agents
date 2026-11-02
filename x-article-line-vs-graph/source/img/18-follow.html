@@ -1,0 +1,38 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../design/base.css">
+<style>
+  .frame { padding: 70px 72px 64px; }
+  .kicker { margin-bottom: 22px; }
+  .title { font-size: 76px; line-height: 1.0; letter-spacing: -0.035em; margin: 0 0 22px; }
+  .sub { font-size: 28px; color: var(--ink-2); margin: 0 0 40px; max-width: 760px; }
+  .gets { display: grid; gap: 16px; margin: 0 0 46px; }
+  .get { display: flex; align-items: center; gap: 18px; font: 600 28px/1.25 'Inter', sans-serif; color: var(--ink); }
+  .tick { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+          background: var(--green-soft); border: 2px solid var(--green-border); color: var(--green); font: 800 22px/1 'Inter', sans-serif; }
+  .cta { display: flex; align-items: center; gap: 22px; }
+  .btn { display: inline-flex; align-items: center; gap: 14px; background: var(--accent); color: var(--on-accent);
+         font: 800 34px/1 'Inter Display', 'Inter', sans-serif; letter-spacing: -0.01em; padding: 22px 38px; border-radius: 999px;
+         box-shadow: 0 0 0 8px rgba(255,107,44,.14), 0 14px 44px rgba(255,107,44,.30); }
+  .btn svg { width: 30px; height: 30px; }
+  .hint { font: 600 22px/1.35 'JetBrains Mono', monospace; color: var(--muted); letter-spacing: .02em; }
+  .glow { position: absolute; right: -120px; top: -120px; width: 520px; height: 520px; border-radius: 50%;
+          background: radial-gradient(closest-side, rgba(255,107,44,.20), rgba(255,107,44,0)); pointer-events: none; }
+</style></head><body>
+<div class="frame">
+  <div class="glow"></div>
+  <div class="kicker">You made it to the end</div>
+  <h1 class="title">Want the next one?<br><em>Follow me.</em></h1>
+  <p class="sub">I break down Claude Code like this: simple words, real code, pictures you can save.</p>
+  <div class="gets">
+    <div class="get"><span class="tick">✓</span>More breakdowns like this one</div>
+    <div class="get"><span class="tick">✓</span>Prompts and scripts you can paste</div>
+    <div class="get"><span class="tick">✓</span>Cheat sheets made to bookmark</div>
+  </div>
+  <div class="cta">
+    <span class="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2.5 21c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/><path d="M19 8v6M16 11h6"/></svg>Follow</span>
+    <span class="hint">it takes one tap,<br>and the next one finds you</span>
+  </div>
+</div>
+<script src="../design/wires.js"></script>
+<script>done();</script>
+</body></html>

@@ -1,5 +1,5 @@
 """Build a self-contained HTML preview of the X Article from article.md.
-Usage: python3 -I /tmp/work/build_preview.py <article_dir>
+Usage: python3 source/build_preview.py <article_dir>
 Writes <article_dir>/preview.html with all images embedded."""
 import base64, html, os, re, sys
 
@@ -86,6 +86,15 @@ page = f'''<!doctype html>
   figure img {{ width: 100%; border-radius: 14px; border: 1px solid #eff3f4; display: block; }}
   figcaption {{ font: 12px/1.4 ui-monospace, Menlo, monospace; color: #8b98a5; margin-top: 6px; }}
   .missing {{ padding: 40px; text-align: center; background: #fee; color: #a00; border-radius: 12px; }}
+  @media (prefers-color-scheme: dark) {{
+    body {{ background: #000; color: #e7e9ea; }}
+    .note {{ background: #16181c; border-bottom-color: #2f3336; color: #c9cdd1; }}
+    .note b {{ color: #ff8b57; }}
+    blockquote {{ border-left-color: #333639; color: #b9bec3; }}
+    pre {{ background: #16181c; border-color: #2f3336; }}
+    hr {{ border-top-color: #2f3336; }}
+    figure img {{ border-color: #2f3336; }}
+  }}
 </style></head><body>
 <div class="note"><b>Прев'ю статті для X.</b> Текст можна виділити й вставити в редактор X Articles: заголовки, жирний, списки й цитати переносяться. Картинки завантажуй окремо з папки images, підпис під кожною показує, яка саме. Код додавай окремим блоком коду в редакторі X, як в оригінальній статті.</div>
 <article>

@@ -18,7 +18,8 @@
  */
 (function () {
   const NS = 'http://www.w3.org/2000/svg';
-  const COLORS = { accent: '#C8552B', green: '#4D6B37', muted: '#B4ACA0', ink: '#1D1B18' };
+  let COLORS = { accent: '#C8552B', green: '#4D6B37', muted: '#B4ACA0', ink: '#1D1B18' };
+  let ROUGH = false;
   let svg, frame;
   window.__wireErrors = [];
 
@@ -32,7 +33,24 @@
     }
     svg.setAttribute('width', frame.offsetWidth);
     svg.setAttribute('height', frame.offsetHeight);
+    // theme hooks: colors and a hand-drawn wobble come from CSS variables
+    const cs = getComputedStyle(document.documentElement);
+    for (const k of Object.keys(COLORS)) {
+      const v = cs.getPropertyValue('--wire-' + k).trim();
+      if (v) COLORS[k] = v;
+    }
+    ROUGH = cs.getPropertyValue('--wire-rough').trim() === '1';
     const defs = document.createElementNS(NS, 'defs');
+    if (ROUGH) {
+      const f = document.createElementNS(NS, 'filter');
+      f.setAttribute('id', 'rough');
+      // userSpaceOnUse: a filter on a perfectly straight line has a zero-height box and would vanish otherwise
+      f.setAttribute('filterUnits', 'userSpaceOnUse');
+      f.setAttribute('x', '0'); f.setAttribute('y', '0');
+      f.setAttribute('width', String(frame.offsetWidth)); f.setAttribute('height', String(frame.offsetHeight));
+      f.innerHTML = '<feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="3.2"/>';
+      defs.appendChild(f);
+    }
     for (const [k, c] of Object.entries(COLORS)) {
       const m = document.createElementNS(NS, 'marker');
       m.setAttribute('id', 'h-' + k);
@@ -97,6 +115,7 @@
     p.setAttribute('stroke-linecap', 'round');
     if (o.dashed) p.setAttribute('stroke-dasharray', '9 9');
     if (head) p.setAttribute('marker-end', `url(#h-${color})`);
+    if (ROUGH) p.setAttribute('filter', 'url(#rough)');
     svg.appendChild(p);
     const t = o.t ?? 0.5;
     const mx = bez(sx, c1x, c2x, ex, t), my = bez(sy, c1y, c2y, ey, t);
